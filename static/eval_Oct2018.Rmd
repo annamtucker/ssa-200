@@ -11,7 +11,7 @@ always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE, warning = FALSE, message = FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center", fig.height = 3, fig.width = 4)
 library(tidyverse)
 library(readxl)
 library(cowplot)
@@ -27,32 +27,36 @@ We asked four multiple choice questions before and after the course to assess bo
   
 _The correct answers are in bold_  
    
-1.	What is a model?  
+__1.	What is a model?__  
 a.	Someone who walks in fashion shows and is photographed a lot.  
 b.	A mathematical equation.  
 __c.	A simplified representation of reality.__  
 d.	A computer program used to predict future events.  
   
-2.	What information does a regression coefficient tell you?  
+__2.	What information does a regression coefficient tell you?__  
 __a.	It quantifies the relationship between a predictor variable and a response variable.__  
 b.	It describes the correlation between two predictor variables in the model.  
 c.	It tells you the probability that a covariate is an important predictor of the response variable.  
 d.	It tells you how close the observed value is to the mean.  
   
-3.	What types of uncertainty can we resolve using statistical models?  
+__3.	What types of uncertainty can we resolve using statistical models?__  
 a.	Demographic stochasticity and observational uncertainty  
 __b.	Observational uncertainty and ecological uncertainty__  
 c.	Partial controllability and environmental stochasticity  
 d.	Environmental stochasticity and demographic stochasticity  
 
-4.	Which of the following statements is a correct interpretation of the population projection below?   
-![The solid line is the median and the dashed lines are the 95% confidence intervals](img/pop-trend.png)
-   
+__4.	Which of the following statements is a correct interpretation of the population projection below?__  
+_The solid line is the median and the dashed lines are the 95% confidence intervals_   
 a.	This population has high resiliency.  
 b.	This population will most likely be extinct in 30 years.  
-_c.	This population will most likely remain stable for the next 30 years._  
+__c.	This population will most likely remain stable for the next 30 years.__  
 d.	It is more likely than not that there will be at least 1000 individuals in the population in 30 years.  
-  
+   
+<div style = "width:300px; height: 200px">
+![](img/pop-trend.png)
+</div>
+   
+
 #### Reponses  
    
 ```{r}
