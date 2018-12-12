@@ -13,6 +13,7 @@ __Assessing historic and current conditions__
 [Presence-type data](static/lectures/ssa200_lecture3_presence-data.pdf)  
    
 [Count data](static/lectures/ssa200_lecture4_count-data.pdf)  
+[Count data ... with notes!](static/lectures/ssa200_lecture4_count-data_notes.pdf)  
   
 [Demographic data](static/lectures/ssa200_lecture5_demographic-data.pdf)  
    
