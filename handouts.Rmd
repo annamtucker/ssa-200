@@ -4,8 +4,8 @@ title: "Useful links and materials"
   
 __Modeling for SSAs__  
   
-[Conceptual diagram](static/handouts/conceptual-diagram.pdf)
-
+[Conceptual diagram](static/handouts/conceptual-diagram.pdf)  
+  
   
 __Species Status Assessments__  
   
