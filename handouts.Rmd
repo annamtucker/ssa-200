@@ -37,5 +37,12 @@ Drawing on his own groundbreaking work, Silver examines the world of prediction,
   
   
 [Quantitative Conservation Biology: Theory and Practice of Population Viability Analysis](https://www.amazon.com/Quantitative-Conservation-Biology-Population-Viability/dp/0878935460)   
-The goal of this book is to provide practical, intelligible, and intuitive explanations of population modeling to empirical ecologists and conservation biologists. Modeling methods that do not require large amounts of data (typically unavailable for endangered species) are emphasized. As such, the book is appropriate for undergraduate and graduate students interested in quantitative conservation biology, managers charged with preserving endangered species, and, in short, for any conservation biologist or ecologist seeking to better understand the analysis and modeling of population data.
+The goal of this book is to provide practical, intelligible, and intuitive explanations of population modeling to empirical ecologists and conservation biologists. Modeling methods that do not require large amounts of data (typically unavailable for endangered species) are emphasized. As such, the book is appropriate for undergraduate and graduate students interested in quantitative conservation biology, managers charged with preserving endangered species, and, in short, for any conservation biologist or ecologist seeking to better understand the analysis and modeling of population data.  
+  
+---  
+  
+__Exploring uncertainties__  
+  
+[Another Shiny app!](https://amtucker.shinyapps.io/wild4890_pva/)  
+This app allows you to explore the effects of incoporating different types of uncertainties into population size projections using lambda and/or intrinsic rate of increase.  
   

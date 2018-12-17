@@ -25,7 +25,7 @@ get_beta_vals = function(n, mean, sd){
 reps = 1000
 nyrs = 15
 
-env = F
+env = T
 
 # t[2,3], t[1,3], t[1,2] +
 b_noise = 1.5
@@ -34,8 +34,8 @@ b_noise = 1.5
 b_temp = -1.8
 
 # input future noise and temp
-noise = 2
-temp = 0.5
+noise = 0
+temp = 0
 
 # setup simulation
 pops = 11
@@ -152,6 +152,48 @@ res %>%
   ylab("Number of populations in each state (11 total)") +
   annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf)+
   annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf)
+
+
+
+res %>% 
+  group_by(rep, year) %>% 
+  count(state) %>% 
+  ungroup() %>% 
+  complete(year, state, fill = list(n = 0)) %>% 
+  mutate(state = factor(c("Extirpated", "Low", "High")[state],
+                        levels = c("Extirpated", "Low", "High"))) %>% 
+  ggplot(aes(x = year, col = state, fill = state, group = rep)) +
+  geom_line(aes(y = n), lwd = 1, alpha = 0.05) +
+  facet_grid(~state, scales= "free") +
+  scale_fill_viridis_d(end = 0.7, name = "State") +
+  scale_color_viridis_d(end = 0.7, name = "State") +
+  scale_x_continuous(breaks = seq(0, nyrs, 2)) +
+  scale_y_continuous(breaks = seq(1, 11, 2), limits = c(1,11)) +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "white")) +
+  xlab("Year") +
+  ylab("Number of populations in each state (11 total)") +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf)+
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf) 
+
+
+# plot individual populations
+
+res %>% 
+  ggplot(aes(x = year, col = ecotype, group = rep)) +
+  geom_line(aes(y = state), lwd = 1, alpha = 0.1) +
+  facet_wrap(~pop, scales= "free") 
+  scale_fill_viridis_d(end = 0.7, name = "State") +
+  scale_color_viridis_d(end = 0.7, name = "State") +
+  scale_x_continuous(breaks = seq(0, nyrs, 2)) +
+  theme(legend.position = "none",
+        strip.background = element_rect(fill = "white")) +
+  xlab("Year") +
+  ylab("State") +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf)+
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf)
+
+
 
 
 # number in final state by ecotype
