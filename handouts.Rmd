@@ -41,14 +41,17 @@ The goal of this book is to provide practical, intelligible, and intuitive expla
   
 ---  
   
-__Exploring uncertainties__  
+__Exploring probability and uncertainty__  
   
 [Another Shiny app!](https://amtucker.shinyapps.io/wild4890_pva/)  
 This app allows you to explore the effects of incoporating different types of uncertainties into population size projections using lambda and/or intrinsic rate of increase.  
   
+[A visual introduction to probability and statistics](https://seeing-theory.brown.edu/)   
+This is a very cool set of modules to introduce basic concepts in probability and statistics using interactive visuals. Highly recommended!  
+   
 ---  
   
-__Demographic matrix models___  
+__Demographic matrix models__  
 [COMADRE and COMPADRE Databases](https://comadre-db.org/)  
 This is a freely-available database where the authors have compiled estimates of demographic rates from published studies of plants (COMPADRE) and animals (COMADRE). There is demographic information from 405 animals and 695 plants in the database currently, with the majority from N. America. This could be a great resource for demographic estimates of sister taxa.  
   
