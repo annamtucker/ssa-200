@@ -61,7 +61,7 @@ d.	It is more likely than not that there will be at least 1000 individuals in th
    
 ```{r}
 res <- read_excel("assessment-results.xlsx", 
-                  sheet = "responses")
+                  sheet = "responses - houston")
 ```
 
 ```{r}

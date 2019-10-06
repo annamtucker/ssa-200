@@ -8,9 +8,7 @@ involved in conducting SSAs for the Fish and Wildlife Service; particularly thos
   
 _Who are the instructors?_  
 Dr. Conor McGowan, U.S. Geological Survey, Acting Unit Leader  
-Dr. Nicole F. Angeli, Post-doctoral Fellow  
-Anna Tucker, doctoral student  
-Kylee Dunham, doctoral student  
+Dr. Anna Tucker, Postdoctoral Researcher  
 All from the Alabama Cooperative Fish and Wildlife Research Unit, School of Forestry and Wildlife Sciences, Auburn University.  
   
 _Will I learn how to build population models?_  
