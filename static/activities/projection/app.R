@@ -28,12 +28,15 @@ ui <- navbarPage("Island Mouse multistate projections", theme = "sandstone",
                 column(6,
                        # Noise level
                        numericInput("noise", min = -50, max = 50, value = 0,
-                                    label = "Change in ambient noise level (db)", step = 0.5)
+                                    label = "Change in ambient noise level (db)", step = 0.5),
+                       "positive number = more noise, negative number = less noise"
                               ),
                 column(6,
                        # Temperature range
                        numericInput("temp", min = -50, max = 50, value = 0,
-                                    label = "Change in annual temperature range", step = 0.5))
+                                    label = "Change in annual temp. range (\U00B0 C)", step = 0.5),
+                       "positive number = more variable climate,\nnegative number = less variable climate"
+                       )
                 ),
               
               actionButton("go", "Run simulation")
@@ -41,7 +44,8 @@ ui <- navbarPage("Island Mouse multistate projections", theme = "sandstone",
             
             mainPanel(
               wellPanel(plotOutput("n_time")),
-              wellPanel(plotOutput("final_yr")),
+              #wellPanel(plotOutput("final_yr")),
+              wellPanel(plotOutput("n_time_ecotype")),
               tableOutput("p_ext")
             )
           )
@@ -59,6 +63,7 @@ server <- function(input, output) {
   library(tidyverse)
   library(cowplot)
   library(statmod)
+  theme_set(theme_cowplot())
   
   # functions ----
   
@@ -84,8 +89,8 @@ server <- function(input, output) {
     nyrs = input$years
     env = input$env
     
-    b_noise = 1.5
-    b_temp = -1.8
+    b_noise = 0.15
+    b_temp = -0.18
     
     noise = input$noise
     temp = input$temp
@@ -94,9 +99,9 @@ server <- function(input, output) {
     pops = 11
     ecotype = c(rep("Coastal", 4), rep("Mountain", 3), rep("Palms", 4))
     
-    all.means = matrix(c(0.9, 0.3, 0.05,
-                         0.1, 0.5, 0.2,
-                         0, 0.2, 0.75), nrow = 3, ncol = 3, byrow = T)
+    all.means = matrix(c(0.8, 0.15, 0.05,
+                         0.15, 0.6, 0.25,
+                         0, 0.2, 0.8), nrow = 3, ncol = 3, byrow = T)
     all.sd = matrix(c(0.05, 0.1, 0.02,
                       0.08, 0.05, 0.04,
                       0, 0.09, 0.05), nrow = 3, ncol = 3, byrow = T)
@@ -195,7 +200,7 @@ server <- function(input, output) {
       complete(year, state, fill = list(mprop = 0)) %>% 
       mutate(state = factor(c("Extirpated", "Low", "High")[state],
                             levels = c("Extirpated", "Low", "High"))) %>% 
-      ggplot(aes(x = year, col = state, fill = state)) +
+      ggplot(aes(x = year)) +
       #geom_linerange(aes(ymin = lcl, ymax = ucl), alpha= 0.9) +
       geom_line(aes(y = lcl), lty = 2, lwd = 1) +
       geom_line(aes(y = ucl), lty = 2, lwd = 1) +
@@ -205,46 +210,85 @@ server <- function(input, output) {
       scale_color_viridis_d(end = 0.7, name = "State") +
       scale_x_continuous(breaks = seq(0, nyrs, 2)) +
       theme(legend.position = "none",
-            strip.background = element_rect(fill = "white")) +
+            strip.background = element_rect(fill = "white"),
+            strip.text = element_text(size = 14)) +
       xlab("Year") +
       ylab("Number of populations in each state (11 total)") +
       annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf)+
-      annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf)
+      annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf) +
+      ggtitle("Number of total populatons in each state")
     
     
   })
   
-  output$final_yr <- renderPlot({
+  output$n_time_ecotype <- renderPlot({
+    
     nyrs = input$years
     
     dat() %>% 
       group_by(rep, year, ecotype) %>% 
       count(state) %>% 
       ungroup() %>% 
-      group_by(year, ecotype, state) %>% 
+      group_by(year, state, ecotype) %>% 
       summarize(mprop = median(n),
                 lcl = quantile(n, probs = 0.025),
                 ucl = quantile(n, probs = 0.975)) %>% 
       ungroup() %>% 
-      complete(year, ecotype, state, fill = list(mprop = 0)) %>% 
-      filter(year == nyrs) %>% 
+      complete(year, state, ecotype, fill = list(mprop = 0)) %>% 
       mutate(state = factor(c("Extirpated", "Low", "High")[state],
-                            levels = c("Extirpated", "Low", "High")),
-             ecotype = c("Coastal" = "Coastal (4 total)",
-                         "Mountain" = "Mountain (3 total)",
-                         "Palms" = "Paradise Palms (4 total)")[ecotype]) %>% 
-      ggplot(aes(x = state, y = mprop, col= state, fill = state)) +
-      geom_bar(stat = "identity", alpha = 0.5, width = 0.75) +
-      geom_linerange(aes(ymin = lcl, ymax = ucl), lwd = 1.5) +
+                            levels = c("Extirpated", "Low", "High"))) %>% 
+      ggplot(aes(x = year, col = ecotype)) +
+      #geom_linerange(aes(ymin = lcl, ymax = ucl), alpha= 0.9) +
+      geom_line(aes(y = lcl), lty = 2, lwd = 1) +
+      geom_line(aes(y = ucl), lty = 2, lwd = 1) +
+      geom_line(aes(y = mprop), lwd = 1.5) +
+      facet_grid(ecotype~state, scales= "free") +
       scale_fill_viridis_d(end = 0.7, name = "State") +
       scale_color_viridis_d(end = 0.7, name = "State") +
-      theme(strip.background = element_rect(fill = "white"),
-            legend.position = "none") +
-      xlab("Population state in final year") +
-      ylab("Number of populations") +
-      facet_wrap(~ecotype)
+      scale_x_continuous(breaks = seq(0, nyrs, 2)) +
+      theme(legend.position = "none",
+            strip.background = element_rect(fill = "white"),
+            strip.text = element_text(size = 14)) +
+      xlab("Year") +
+      ylab("Number of populations in each state (11 total)") +
+      annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf)+
+      annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf) +
+      ggtitle("Number of populations in each state for each ecotype")
+    
     
   })
+  
+  # output$final_yr <- renderPlot({
+  #   nyrs = input$years
+  #   
+  #   dat() %>% 
+  #     group_by(rep, year, ecotype) %>% 
+  #     count(state) %>% 
+  #     ungroup() %>% 
+  #     group_by(year, ecotype, state) %>% 
+  #     summarize(mprop = median(n),
+  #               lcl = quantile(n, probs = 0.025),
+  #               ucl = quantile(n, probs = 0.975)) %>% 
+  #     ungroup() %>% 
+  #     complete(year, ecotype, state, fill = list(mprop = 0)) %>% 
+  #     filter(year == nyrs) %>% 
+  #     mutate(state = factor(c("Extirpated", "Low", "High")[state],
+  #                           levels = c("Extirpated", "Low", "High")),
+  #            ecotype = c("Coastal" = "Coastal (4 total)",
+  #                        "Mountain" = "Mountain (3 total)",
+  #                        "Palms" = "Paradise Palms (4 total)")[ecotype]) %>% 
+  #     ggplot(aes(x = state, y = mprop, col= state, fill = state)) +
+  #     geom_bar(stat = "identity", alpha = 0.5, width = 0.75) +
+  #     geom_linerange(aes(ymin = lcl, ymax = ucl), lwd = 1.5) +
+  #     scale_fill_viridis_d(end = 0.7, name = "State") +
+  #     scale_color_viridis_d(end = 0.7, name = "State") +
+  #     theme(strip.background = element_rect(fill = "white"),
+  #           legend.position = "none") +
+  #     xlab("Population state in final year") +
+  #     ylab("Number of populations") +
+  #     facet_wrap(~ecotype)
+  #   
+  # })
   
   output$p_ext <- renderTable({
     nyrs = input$years
@@ -252,21 +296,26 @@ server <- function(input, output) {
     dat() %>% 
       filter(year == nyrs) %>% 
       group_by(rep) %>% 
-      summarize(h = ifelse(all(state == 1), 1, 0)) %>%
+      summarize(e = ifelse(all(state == 1), 1, 0),
+                h = ifelse(any(state == 3), 1, 0)) %>%
       ungroup() %>% 
-      summarize(pext = mean(h)) %>% 
+      summarize(pext = mean(e),
+                phigh = mean(h)) %>% 
       mutate(ecotype = "Overall") -> overall
     
     dat() %>% 
       filter(year == nyrs) %>% 
       group_by(rep, ecotype) %>% 
-      summarize(h = ifelse(all(state == 1), 1, 0)) %>%
+      summarize(e = ifelse(all(state == 1), 1, 0),
+                h = ifelse(any(state == 3), 1, 0)) %>%
       ungroup() %>% 
       group_by(ecotype) %>% 
-      summarize(pext = mean(h)) %>% 
+      summarize(pext = mean(e),
+                phigh = mean(h)) %>% 
       full_join(overall) %>% 
       rename(Group = ecotype,
-             `Extinction probability` = pext)
+             `Extinction probability` = pext,
+             `Probability of at least one high abundance pop.` = phigh)
     
     
     
